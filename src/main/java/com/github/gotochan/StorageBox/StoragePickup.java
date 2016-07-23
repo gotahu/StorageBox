@@ -37,7 +37,15 @@ public class StoragePickup implements Listener {
 				if(!util.isStorageBox(item)) {
 					continue;
 				}
+
 			if(item.getType().equals(pMaterial)) {
+				if (util.isStorageBox(pItem)) {
+					util.createStorageBox(item, util.getValue(item) + util.getValue(pItem));
+					player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, (float) 0.2, (float) 2.0);
+					event.setCancelled(true);
+					event.getItem().remove();
+					return;
+				}
 				util.createStorageBox(item, (util.getValue(item) + pItem.getAmount()));
 				player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, (float) 0.2, (float) 2.0);
 				event.setCancelled(true);

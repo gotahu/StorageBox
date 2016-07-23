@@ -1,5 +1,5 @@
 name: StorageBox
-version: 0.2
+version: 1.0
 description: StorageBoxを追加します。
 author: Hinyari_Gohan
 main: com.github.gotochan.StorageBox.StorageBox
@@ -25,6 +25,7 @@ permissions:
     default: true
   sb.place:
     description: placeの使用権限
+    default: true
   sb.use:
     children:
       sb.create: true
