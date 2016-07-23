@@ -1,5 +1,6 @@
 package com.github.gotochan.StorageBox;
 
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,7 +27,7 @@ public class SBCommandExecutor implements CommandExecutor{
 		if (command.getName().equalsIgnoreCase("storagebox")) {
 			if(args.length == 0)
 				return false;
-			if (item==null) {
+			if (item.getType().equals(Material.AIR)) {
 				player.sendMessage(plugin.error + "StorageBoxを作成したいアイテムを持ってください。");
 				return true;
 			}
