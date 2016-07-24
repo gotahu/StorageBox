@@ -20,6 +20,7 @@ public class StorageBox extends JavaPlugin implements Listener {
 		pm.registerEvents(new StoragePlace(this), this);
 		pm.registerEvents(new StoragePickup(this), this);
 		executor = new SBCommandExecutor(this);
+		pm.registerEvents(new StorageOtherUse(this), this);
 		getCommand("storagebox").setExecutor(executor);
 	}
 
