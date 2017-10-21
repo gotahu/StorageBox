@@ -1,5 +1,5 @@
 name: StorageBox
-version: 1.0
+version: 2.0
 description: StorageBoxを追加します。
 author: Hinyari_Gohan
 main: com.github.gotochan.StorageBox.StorageBox
@@ -8,7 +8,7 @@ commands:
   storagebox:
     aliases: [sb]
     description: StorageBoxのコマンドです。
-    usage: /<command> [remove,create,info]
+    usage: /<command> [remove, create, info, edit]
 
 permissions:
   sb.create:
@@ -26,6 +26,9 @@ permissions:
   sb.place:
     description: placeの使用権限
     default: true
+  sb.consume:
+    description: consumeの使用権限
+    default: true
   sb.use:
     children:
       sb.create: true
@@ -33,3 +36,7 @@ permissions:
       sb.remove: true
       sb.pickup: true
       sb.place: true
+      sb.consume: true
+  sb.debug:
+    description: デバッグを表示する権限
+    default: false
