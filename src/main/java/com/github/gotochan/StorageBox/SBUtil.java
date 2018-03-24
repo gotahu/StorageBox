@@ -31,7 +31,7 @@ public class SBUtil
 
     private List<String> getLore(Material material, int value)
     {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add("§6§l[ StorageBox ]");
         list.add(material.toString());
         list.add(String.valueOf(value));
@@ -51,8 +51,7 @@ public class SBUtil
         if (itemStack != null)
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().hasLore())
-                    if (itemStack.getItemMeta().getLore().get(0).contains("StorageBox"))
-                        return true;
+                    return itemStack.getItemMeta().getLore().get(0).contains("StorageBox");
         return false;
     }
 

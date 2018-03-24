@@ -60,13 +60,13 @@ public class StorageBox extends JavaPlugin implements Listener
         List<String> lore = new ArrayList<>();
         lore.add("§6§o右クリックで登録GUIを開くことが出来ます!");
 
-        ItemStack CHEST = new ItemStack(Material.CHEST);
-        ItemMeta meta = CHEST.getItemMeta();
+        ItemStack chest = new ItemStack(Material.CHEST);
+        ItemMeta meta = chest.getItemMeta();
         meta.setDisplayName("§6§n-アイテムを登録してください-");
         meta.setLore(lore);
-        CHEST.setItemMeta(meta);
+        chest.setItemMeta(meta);
 
-        ShapedRecipe recipe1 = new ShapedRecipe(CHEST);
+        ShapedRecipe recipe1 = new ShapedRecipe(chest);
         recipe1.shape("***", "* *", "***");
         recipe1.setIngredient('*', Material.CHEST);
 
