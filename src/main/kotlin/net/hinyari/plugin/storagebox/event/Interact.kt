@@ -20,14 +20,25 @@ class Interact : Listener {
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
         
+        val interactedItem = event.item
+        
+        if (interactedItem != null && interactedItem.hasItemMeta() &&
+                interactedItem.itemMeta.displayName == "§6§lStorageBox : §r§6未登録") {
+            
+            // 他メソッドに移管
+            interactWithUnregisteredStorageBox(event)
+            return
+        }
+        
+        
         // StorageBoxじゃなかったら論外
-        if (!SBUtil.isStorageBox(event.item)) {
+        if (!SBUtil.isStorageBox(interactedItem)) {
             return
         }
         
         val player = event.player
         
-        val interactedItem = event.item
+        
         val isMainHand = player.inventory.itemInMainHand == interactedItem
         
         // 持っている物がStorageBoxであった
@@ -47,8 +58,6 @@ class Interact : Listener {
                     return
                 }
                 
-                println("isMainHand -> $isMainHand")
-
                 // メインハンドにStorageBoxを所持している場合
                 when {
                     isMainHand -> 
@@ -92,22 +101,15 @@ class Interact : Listener {
                 object : BukkitRunnable() {
                     override fun run() {
                         
-                        val minusOne = amount -1
-                        println("minusOne = $minusOne")
-                        
+                        val minusOne = amount -1                        
                         val afterItem = SBUtil.createStorageBox(interactedItem, minusOne, player)
                         
                         // メインハンドにStorageBoxがある場合
                         when {
                             isMainHand -> {
-                                println(amount)
-                                println(amount - 1)
-
-                                player.inventory.itemInMainHand = ItemStack(Material.AIR)
                                 player.inventory.itemInMainHand = afterItem
                             }
                             player.inventory.itemInOffHand == event.item -> {
-                                player.inventory.itemInOffHand = ItemStack(Material.AIR)
                                 player.inventory.itemInOffHand = afterItem
                             }
                             else -> return
@@ -115,14 +117,18 @@ class Interact : Listener {
                         
                         interactedItem.amount = 1
                         
-                        println(afterItem)
-                        
                     }
                 }.runTaskLater(plugin, 1L) // 1tick後
                 
             }
             
         //}
+        
+        
+    }
+    
+    private fun interactWithUnregisteredStorageBox(event: PlayerInteractEvent) {
+        val player = event.player
         
         
     }

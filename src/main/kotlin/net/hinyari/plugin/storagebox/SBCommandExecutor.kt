@@ -31,10 +31,12 @@ class SBCommandExecutor : CommandExecutor {
 
             val item = player.inventory.itemInMainHand
             
+            /*
             if (item == null || item.type == Material.AIR) {
                 player.sendMessage("${plugin.PREFIX_ERROR}アイテムを手に持った状態で実行して下さい！")
                 return true
             }
+            */
             
             if (args[0].equals("create", true)) {
                 if (player.hasPermission("sb.create")) {
@@ -59,7 +61,7 @@ class SBCommandExecutor : CommandExecutor {
                             true
                         }
                         
-                    } else if (args.size >= 2) {
+                    } else if (args.size == 3) {
                         
                         if (player.hasPermission("sb.create.infinity")) {
                             val material = Material.valueOf(args[1].toUpperCase())

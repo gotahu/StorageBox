@@ -1,9 +1,6 @@
 package net.hinyari.plugin.storagebox
 
-import net.hinyari.plugin.storagebox.event.Consume
-import net.hinyari.plugin.storagebox.event.Interact
-import net.hinyari.plugin.storagebox.event.Pickup
-import net.hinyari.plugin.storagebox.event.Place
+import net.hinyari.plugin.storagebox.event.*
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
@@ -47,16 +44,16 @@ class StorageBoxMain : JavaPlugin() {
     }
 
     private fun init() {
-        val lore = mutableListOf<String>()
-        lore.add("§6§o右クリックで登録GUIを開くことが出来ます!")
-
-        val chest = ItemStack(Material.CHEST)
-        val meta = chest.itemMeta
-        meta.displayName = "§6§n-アイテムを登録してください-"
-        meta.lore = lore
-        chest.itemMeta = meta
-
-        val recipe1 = ShapedRecipe(namespacedKey, chest)
+        val chestItemStack = ItemStack(Material.CHEST)
+        val meta = chestItemStack.itemMeta
+        
+        
+        meta.displayName = "&6&lStorageBox : &r&6未登録"
+        meta.lore = listOf("&f右クリックでアイテムを登録")
+        
+        chestItemStack.itemMeta = meta
+        
+        val recipe1 = ShapedRecipe(namespacedKey, chestItemStack)
         recipe1.shape("***", "* *", "***")
         recipe1.setIngredient('*', Material.CHEST)
 

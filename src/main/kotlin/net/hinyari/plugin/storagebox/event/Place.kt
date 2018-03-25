@@ -20,7 +20,6 @@ class Place : Listener {
     fun onBlockPlaceEvent(event: BlockPlaceEvent) {
 
         val player = event.player
-        val uuid = player.uniqueId
 
         val itemInMainHand = player.inventory.itemInMainHand
         val itemInOffHand = player.inventory.itemInOffHand
@@ -61,7 +60,7 @@ class Place : Listener {
                     player.sendMessage("${plugin.PREFIX_ERROR}アイテムを補充して下さい！")
                 }
                 spawnSmoke(event.block.location)
-                playSound(player.location, Sound.BLOCK_DISPENSER_FAIL, 0.4f, 1.0f)
+                player.playSound(player.location, Sound.BLOCK_DISPENSER_FAIL, 0.4f, 1.0f)
                 
                 triedTimes++
                 return
@@ -91,7 +90,7 @@ class Place : Listener {
                     player.sendMessage("${plugin.PREFIX_ERROR}アイテムを補充して下さい！")
                 }
                 spawnSmoke(event.block.location)
-                playSound(player.location, Sound.BLOCK_DISPENSER_FAIL, 0.4f, 1.0f)
+                player.playSound(player.location, Sound.BLOCK_DISPENSER_FAIL, 0.4f, 1.0f)
 
                 triedTimes++
                 return

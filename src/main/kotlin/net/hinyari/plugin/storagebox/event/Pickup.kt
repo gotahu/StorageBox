@@ -34,9 +34,7 @@ class Pickup : Listener {
             if (item == null || !item.hasItemMeta() || (item.hasItemMeta() && (!SBUtil.isStorageBox(item)))) {
                 continue
             }
-
-            // ストレージボックスが見つかった
-
+            
             val sbmaterial = SBUtil.getTypeOfStorageBox(item)
 
             // ストレージボックスの内容と合っているか

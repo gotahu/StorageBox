@@ -15,7 +15,7 @@ class SBUtil {
         fun createStorageBox(item: ItemStack, amount: Int, player: Player): ItemStack {
             
             //println("createStorageBox($item, $amount, $player")
-            
+                        
             if (amount < 0) {
                 throw IllegalArgumentException("amount must be more than 0")
             }
@@ -124,6 +124,8 @@ class SBUtil {
          * @param   amount      渡したい個数
          */
         fun giveItemToPlayer(player: Player, itemStack: ItemStack, amount: Int) {
+            
+            println(countEmptySlots(player.inventory))
             
             val world = player.world
             val location = player.location
@@ -237,7 +239,6 @@ class SBUtil {
                         override fun run() {
                             
                             val isMainHand = storagebox == player.inventory.itemInMainHand
-                            println("isMainHand -> $isMainHand")
                                                         
                             // メインハンドに所持している
                             when {
@@ -264,14 +265,7 @@ class SBUtil {
         }
                 
         private fun countEmptySlots(inventory: Inventory) : Int {
-            var count = 0
-            for (item in inventory.contents) {
-                if (item == null) {
-                    count++
-                }
-            }
-
-            return count
+            return 36 - inventory.contents.size
         }
 
 
