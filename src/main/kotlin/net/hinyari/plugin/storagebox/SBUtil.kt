@@ -1,6 +1,8 @@
 package net.hinyari.plugin.storagebox
 
 import org.bukkit.Bukkit
+import org.bukkit.Effect
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -11,6 +13,11 @@ import java.util.*
 class SBUtil {
     
     companion object {
+
+        // 愉快な定数たち
+        const val errorPrefix = "§c§l[ StorageBox ]§r "
+        const val prefix = "§a§l[ StorageBox ]§r "
+        const val noPermission = "${errorPrefix}このコマンドを実行する権限がありません！"
 
         fun createStorageBox(item: ItemStack, amount: Int, player: Player): ItemStack {
             
@@ -65,6 +72,12 @@ class SBUtil {
             
             return false
         }
+
+        fun spawnSmoke(location: Location) {
+            location.world.playEffect(location.add(0.0, 1.0, 0.0), Effect.SMOKE, 4)
+        }
+
+
 
         /**
          * StorageBoxに入っているアイテムの個数をリターンします。
@@ -130,6 +143,9 @@ class SBUtil {
             val world = player.world
             val location = player.location
             
+            val clonedItem = itemStack.clone()
+            clonedItem.itemMeta = Bukkit.getItemFactory().getItemMeta(clonedItem.type)
+            
             var itemAmount = amount
             
             var stacks = amount / 64
@@ -141,9 +157,10 @@ class SBUtil {
             if (stacks == 0 || amount == 64) {
                 // 空きがなかった
                 if (countEmptySlots(inventory) == 0) {
-                    world.dropItemNaturally(location, ItemStack(itemStack.type))
+                    world.dropItemNaturally(location, clonedItem)
                 } else { // 空きがあった
-                    inventory.addItem(ItemStack(itemStack.type, amount))
+                    clonedItem.amount = amount
+                    inventory.addItem(clonedItem)
                 }
                 return
             } else { // 1スタック（６５個以上）
@@ -152,20 +169,18 @@ class SBUtil {
                 if (countEmptySlots(inventory) == 0) {
                     
                     while (stacks == 0) {
-                        val cloned = itemStack.clone()
-                        cloned.amount = 64
+                        clonedItem.amount = 64
                         
-                        world.dropItemNaturally(location, cloned)
+                        world.dropItemNaturally(location, clonedItem)
                         
                         stacks--
                     }
                     
                     // 端数がある場合
                     if (fraction != 0) {
-                        val cloned = itemStack.clone()
-                        cloned.amount = fraction
+                        clonedItem.amount = fraction
                         
-                        world.dropItemNaturally(location, cloned)
+                        world.dropItemNaturally(location, clonedItem)
                     }
                     
                 } else if (countEmptySlots(inventory) < stacks) { 
@@ -175,12 +190,11 @@ class SBUtil {
                     
                     // 空のインベントリが埋まるまで
                     while (emptySlots == 0) {
-                        val cloned = itemStack.clone()
-                        cloned.amount = 64
+                        clonedItem.amount = 64
                         
                         itemAmount -= 64
                         
-                        inventory.addItem(cloned)
+                        inventory.addItem(clonedItem)
                         
                         emptySlots = countEmptySlots(inventory)
                     }
@@ -188,10 +202,9 @@ class SBUtil {
                     stacks = itemAmount / 64
                     
                     while (stacks == 0) {
-                        val cloned = itemStack.clone()
-                        cloned.amount = 64
+                        clonedItem.amount = 64
 
-                        world.dropItemNaturally(location, cloned)
+                        world.dropItemNaturally(location, clonedItem)
 
                         itemAmount -= 64
                         stacks--
@@ -199,15 +212,24 @@ class SBUtil {
 
                     // 端数がある場合
                     if (itemAmount != 0) {
-                        val cloned = itemStack.clone()
-                        cloned.amount = itemAmount
+                        clonedItem.amount = itemAmount
 
-                        world.dropItemNaturally(location, cloned)
+                        world.dropItemNaturally(location, clonedItem)
                     }
                 } else { // 空きがあるならそのまま追加
-                    inventory.addItem(ItemStack(itemStack.type, amount))
+                    clonedItem.amount = amount
+                    inventory.addItem(clonedItem)
                 }
             }
+        }
+        
+        fun setOwnerOfStorageBox(storagebox: ItemStack, player: Player) : ItemStack? {
+            if (!isStorageBox(storagebox)) {
+                return null
+            }
+            
+            storagebox.itemMeta.lore[3] = player.uniqueId.toString()
+            return storagebox
         }
                 
         
@@ -227,7 +249,10 @@ class SBUtil {
                     continue
 
                 // 同じMaterialのアイテムが見つかった
-                if (item.type == storagebox.type) {
+                if (item.type == storagebox.type &&
+                        item.data.data == storagebox.data.data &&
+                        item.durability == storagebox.durability &&
+                        item.enchantments == storagebox.enchantments) {
                     // そのアイテムがストレージボックスだったらとりあえず保留？
                     if (SBUtil.isStorageBox(item)) {
                         continue

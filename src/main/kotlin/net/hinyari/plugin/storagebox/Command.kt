@@ -18,7 +18,7 @@ class Command : CommandExecutor {
 
         // プレイヤー以外は受け付けない
         if (sender !is Player) {
-            sender.sendMessage("${plugin.PREFIX_ERROR}ゲーム内で実行して下さい。")
+            sender.sendMessage("${SBUtil.errorPrefix}ゲーム内で実行して下さい。")
         }
 
         val player: Player = sender as Player
@@ -34,7 +34,7 @@ class Command : CommandExecutor {
 
             /*
             if (item == null || item.type == Material.AIR) {
-                player.sendMessage("${plugin.PREFIX_ERROR}アイテムを手に持った状態で実行して下さい！")
+                player.sendMessage("${plugin.errorPrefix}アイテムを手に持った状態で実行して下さい！")
                 return true
             }
             */
@@ -57,7 +57,7 @@ class Command : CommandExecutor {
 
                             true
                         } else {
-                            player.sendMessage("${plugin.PREFIX_ERROR}既にStorageBoxは作成されています！")
+                            player.sendMessage("${SBUtil.errorPrefix}既にStorageBoxは作成されています！")
 
                             true
                         }
@@ -69,7 +69,7 @@ class Command : CommandExecutor {
 
                             // マテリアルがない
                             if (material == null || material == Material.AIR) {
-                                player.sendMessage("${plugin.PREFIX_ERROR}そのようなアイテム名は存在しません！")
+                                player.sendMessage("${SBUtil.errorPrefix}そのようなアイテム名は存在しません！")
                                 player.sendMessage("/$label create <Material> <数量>")
                                 return true
                             }
@@ -78,7 +78,7 @@ class Command : CommandExecutor {
 
                             // 数がおかしい
                             if (amount < 0) {
-                                player.sendMessage("${plugin.PREFIX_ERROR}0以上のs数字を入力して下さい！")
+                                player.sendMessage("${SBUtil.errorPrefix}0以上のs数字を入力して下さい！")
                                 player.sendMessage("/$label create <Material> <数量>")
                                 return true
                             }
@@ -108,7 +108,7 @@ class Command : CommandExecutor {
                         player.sendMessage("Amount: ${SBUtil.getAmountOfStorageBox(item)}")
                         //player.sendMessage("Owner: ${SBUtil.getOwnerOfStorageBox(item)?.name}")
                     } else {
-                        player.sendMessage("${plugin.PREFIX_ERROR}StorageBoxを手に持って実行して下さい！")
+                        player.sendMessage("${SBUtil.errorPrefix}StorageBoxを手に持って実行して下さい！")
                     }
 
                 } else {
@@ -118,7 +118,7 @@ class Command : CommandExecutor {
 
                 if (player.hasPermission("sb.take")) {
                     if (args.size < 2) { // sb takeだけだった
-                        player.sendMessage("${plugin.PREFIX_ERROR}数量を指定して下さい。")
+                        player.sendMessage("${SBUtil.errorPrefix}数量を指定して下さい。")
                         return true
                     }
 
@@ -131,13 +131,13 @@ class Command : CommandExecutor {
 
                             // ゼロ以下
                             if (wantAmount <= 0) {
-                                player.sendMessage("${plugin.PREFIX_ERROR}1以上の数字を入力して下さい！")
+                                player.sendMessage("${SBUtil.errorPrefix}1以上の数字を入力して下さい！")
                                 return true
                             }
 
                             // 求める数量にStorageBox内の数量が満たない
                             if (wantAmount > SBUtil.getAmountOfStorageBox(item)) {
-                                player.sendMessage("${plugin.PREFIX_ERROR}指定した数量のアイテムがありません！")
+                                player.sendMessage("${SBUtil.errorPrefix}指定した数量のアイテムがありません！")
                                 return true
                             }
 
@@ -160,10 +160,10 @@ class Command : CommandExecutor {
                             player.sendMessage("${plugin.PREFIX}${wantAmount}個のアイテムをStorageBoxから取り出しました。")
 
                         } else {
-                            player.sendMessage("${plugin.PREFIX_ERROR}StorageBoxを手に持って実行して下さい！")
+                            player.sendMessage("${SBUtil.errorPrefix}StorageBoxを手に持って実行して下さい！")
                         }
                     } else {
-                        player.sendMessage("${plugin.PREFIX_ERROR}1以上の整数を入力して下さい！")
+                        player.sendMessage("${SBUtil.errorPrefix}1以上の整数を入力して下さい！")
                     }
                 } else {
                     player.sendMessage(plugin.noPerm)
@@ -171,7 +171,7 @@ class Command : CommandExecutor {
 
             } else if (args[0].equals("owner", true)) {
                 if (!SBUtil.isStorageBox(item)) {
-                    player.sendMessage("${plugin.PREFIX_ERROR}所有者を変更したいStorageBoxを手に持って実行して下さい!")
+                    player.sendMessage("${SBUtil.errorPrefix}所有者を変更したいStorageBoxを手に持って実行して下さい!")
                     return true
                 }
                 
@@ -185,7 +185,7 @@ class Command : CommandExecutor {
                             SBUtil.setOwnerOfStorageBox(item, Bukkit.getPlayer(args[1]))
                     player.sendMessage("${plugin.PREFIX}所有者を${args[1]}に変更しました！")
                 } else {
-                    player.sendMessage("${plugin.PREFIX_ERROR}プレイヤー名は存在しません!")
+                    player.sendMessage("${SBUtil.errorPrefix}プレイヤー名は存在しません!")
                 }
                 
                 
