@@ -1,5 +1,6 @@
-package net.hinyari.plugin.storagebox
+package net.hinyari.plugin.storagebox.util
 
+import net.hinyari.plugin.storagebox.StorageBoxMain
 import org.bukkit.Bukkit
 import org.bukkit.Effect
 import org.bukkit.Location
@@ -254,7 +255,7 @@ class SBUtil {
                         item.durability == storagebox.durability &&
                         item.enchantments == storagebox.enchantments) {
                     // そのアイテムがストレージボックスだったらとりあえず保留？
-                    if (SBUtil.isStorageBox(item)) {
+                    if (isStorageBox(item)) {
                         continue
                     }
                     
@@ -268,12 +269,14 @@ class SBUtil {
                             // メインハンドに所持している
                             when {
                                 isMainHand -> player.inventory.itemInMainHand =
-                                        SBUtil.createStorageBox(storagebox,
-                                                SBUtil.getAmountOfStorageBox(storagebox) + item.amount,
+                                        createStorageBox(storagebox,
+                                                getAmountOfStorageBox(
+                                                        storagebox) + item.amount,
                                                 player)
                                 player.inventory.itemInOffHand == storagebox -> player.inventory.itemInOffHand =
-                                        SBUtil.createStorageBox(storagebox,
-                                                SBUtil.getAmountOfStorageBox(storagebox) + item.amount,
+                                        createStorageBox(storagebox,
+                                                getAmountOfStorageBox(
+                                                        storagebox) + item.amount,
                                                 player)
                                 else -> return
                             }
