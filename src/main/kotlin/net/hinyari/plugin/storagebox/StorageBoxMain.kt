@@ -4,23 +4,23 @@ import net.hinyari.plugin.storagebox.event.*
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
+import java.util.regex.Pattern
 
 class StorageBoxMain : JavaPlugin() {
     
     private val namespacedKey = NamespacedKey(this, this.description.name)
+    val inventoryUtil = SBRegisterInventory()
     
     override fun onEnable() {
         instance = this
         init()
-        getCommand("storagebox").executor = SBCommandExecutor()
+        getCommand("storagebox").executor = Command()
         
         getCommand("heal").executor = CommandExecutor { sender, _, _, _ ->
             if (sender is Player) {
@@ -41,6 +41,13 @@ class StorageBoxMain : JavaPlugin() {
         pm.registerEvents(Pickup(), this)
         pm.registerEvents(Consume(), this)
         pm.registerEvents(Interact(), this)
+        pm.registerEvents(Break(), this)
+        pm.registerEvents(Inventories(), this)
+        
+        logger.info(ItemUtils.getItemOriginalName(ItemStack(Material.WOOD)))
+        
+        
+        
     }
 
     private fun init() {
@@ -58,11 +65,11 @@ class StorageBoxMain : JavaPlugin() {
         recipe1.setIngredient('*', Material.CHEST)
 
         server.addRecipe(recipe1)
+        
+
     }
 
-    val PREFIX_ERROR = "§c§l[ StorageBox ]§r "
-    val PREFIX = "§a§l[ StorageBox ]§r "
-    val noPerm = "${PREFIX_ERROR}このコマンドを実行する権限がありません！"
+    
     
     var debugMode: Boolean = false
     
@@ -80,9 +87,6 @@ class StorageBoxMain : JavaPlugin() {
     
     companion object {
         lateinit var instance: StorageBoxMain
-        lateinit var logger: Logger
-        
-        
     }
     
     
