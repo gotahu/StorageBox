@@ -38,9 +38,10 @@ class Pickup : Listener {
             val sbmaterial = SBUtil.getTypeOfStorageBox(item)
 
             // ストレージボックスの内容と合っているか
-            if (sbmaterial == pickedItem.type &&
-                    item.durability == pickedItem.durability &&
-                    item.data.data == pickedItem.data.data) {
+            if (item.type == pickedItem.type &&
+                            item.data.data == pickedItem.data.data &&
+                            item.durability == pickedItem.durability &&
+                            item.enchantments == pickedItem.enchantments) {
 
 
                 val afteramount: Int =
@@ -50,8 +51,8 @@ class Pickup : Listener {
                             if (SBUtil.getOwnerOfStorageBox(item) == SBUtil.getOwnerOfStorageBox(pickedItem)) {
                                 SBUtil.getAmountOfStorageBox(item) + SBUtil.getAmountOfStorageBox(pickedItem)
                             } else {
-                                player.sendMessage("${plugin.PREFIX_ERROR}所有者の異なるStorageBoxをまとめる事は出来ません。")
-                                player.sendMessage("${plugin.PREFIX}所有者を変更するには [/sb owner <新しい所有者名>] を実行します。")
+                                player.sendMessage("${SBUtil.errorPrefix}所有者の異なるStorageBoxをまとめる事は出来ません。")
+                                player.sendMessage("${SBUtil.prefix}所有者を変更するには [/sb owner <新しい所有者名>] を実行します。")
                                 return
                             }
 

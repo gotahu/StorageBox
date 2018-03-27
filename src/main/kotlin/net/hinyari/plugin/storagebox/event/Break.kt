@@ -13,10 +13,11 @@ class Break : Listener {
     fun onBlockBreakEvent(event: BlockBreakEvent) {
         val player = event.player
 
-        if (SBUtil.isStorageBox(player.inventory.itemInMainHand)) {
+        if (SBUtil.isStorageBox(player.inventory.itemInMainHand) &&
+                ItemUtils.isTool(player.inventory.itemInMainHand)) {
             // イベントをキャンセル
             event.isCancelled = true
-            player.sendMessage("${StorageBoxMain.instance.PREFIX_ERROR}StorageBoxからアイテムを出して下さい!")
+            player.sendMessage("${SBUtil.errorPrefix}アイテムをStorageBoxから取り出して使用して下さい!")
             SBUtil.spawnSmoke(event.block.location)
         }
     }

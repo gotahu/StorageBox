@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class Interact : Listener {
@@ -16,6 +15,7 @@ class Interact : Listener {
     // StorageBoxの使用に対応するアイテム
     private var materialArray = arrayOf(Material.ENDER_PEARL, Material.MINECART, Material.WATER_BUCKET, Material.LAVA_BUCKET)
     private val plugin =  StorageBoxMain.instance 
+    private val inventoryUtil = plugin.inventoryUtil
     
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
@@ -85,7 +85,7 @@ class Interact : Listener {
                 // 個数がない
                 if (SBUtil.getAmountOfStorageBox(interactedItem) <= 0) {
                     event.isCancelled = true
-                    player.sendMessage("${plugin.PREFIX_ERROR}アイテムを補充して下さい！")
+                    player.sendMessage("${SBUtil.errorPrefix}アイテムを補充して下さい！")
                     interactedItem.amount = 1
                     return
                 }
@@ -129,7 +129,7 @@ class Interact : Listener {
     
     private fun interactWithUnregisteredStorageBox(event: PlayerInteractEvent) {
         val player = event.player
-        
+        player.openInventory(inventoryUtil.getRegisterInventoryByUUID(player.uniqueId))
         
     }
     

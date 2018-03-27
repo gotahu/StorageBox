@@ -25,7 +25,7 @@ class Consume : Listener {
         }
         
         if (!player.hasPermission("sb.consume")) {
-            player.sendMessage("${plugin.PREFIX_ERROR}権限がありません。")
+            player.sendMessage("${SBUtil.errorPrefix}権限がありません。")
             event.isCancelled = true
             return
         }
@@ -35,14 +35,14 @@ class Consume : Listener {
         val isMainHand = player.inventory.itemInMainHand == event.item
 
         if (SBUtil.getOwnerOfStorageBox(consumedItem) != player) {
-            player.sendMessage("${plugin.PREFIX_ERROR}所有者の異なるStorageBoxのアイテムを消費することは出来ません！")
-            player.sendMessage("${plugin.PREFIX}所有者を変更するには [/sb owner <変更したい所有者名>] を実行して下さい。")
+            player.sendMessage("${SBUtil.errorPrefix}所有者の異なるStorageBoxのアイテムを消費することは出来ません！")
+            player.sendMessage("${SBUtil.prefix}所有者を変更するには [/sb owner <変更したい所有者名>] を実行して下さい。")
         }
         
         // オメーのStorageBoxの容量０以下だからぁ！！
         if (SBUtil.getAmountOfStorageBox(consumedItem) <= 0) {
             event.isCancelled = true
-            player.sendMessage("${plugin.PREFIX_ERROR}アイテムを補充して下さい！")
+            player.sendMessage("${SBUtil.errorPrefix}アイテムを補充して下さい！")
             consumedItem.amount = 1
             
             return

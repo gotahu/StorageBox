@@ -1,11 +1,10 @@
 package net.hinyari.plugin.storagebox.event
 
+import net.hinyari.plugin.storagebox.NMS
 import net.hinyari.plugin.storagebox.SBUtil
 import net.hinyari.plugin.storagebox.StorageBoxMain
-import org.bukkit.Effect
-import org.bukkit.GameMode
-import org.bukkit.Location
-import org.bukkit.Sound
+import org.bukkit.*
+import org.bukkit.block.Chest
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -15,6 +14,7 @@ class Place : Listener {
     
     private val plugin = StorageBoxMain.instance
     private var triedTimes = 0
+    //private val nms = NMS()
     
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun onBlockPlaceEvent(event: BlockPlaceEvent) {
@@ -35,10 +35,34 @@ class Place : Listener {
 
         // 設置権限を持っていなかった場合
         if (!player.hasPermission("sb.place")) {
-            player.sendMessage(plugin.noPerm)
+            player.sendMessage(SBUtil.noPermission)
             event.isCancelled = true
             return
         }
+        
+        val block = event.block
+        val blocktype = block.type
+        
+        if (blocktype == Material.CHEST) {
+            val chest : Chest = block.state as Chest
+            //val craftItemStack = nms.getNMSClass("CraftItemStack").getConstructor()
+            //chest.customName = nms.getNMSClass("CraftItemStack").as
+        }
+        
+        // 内部にインベントリを持つアイテム
+        if (blocktype == Material.FURNACE || blocktype == Material.ENCHANTMENT_TABLE || 
+                blocktype == Material.WHITE_SHULKER_BOX || blocktype == Material.YELLOW_SHULKER_BOX || blocktype == Material.SILVER_SHULKER_BOX
+                || blocktype == Material.RED_SHULKER_BOX || blocktype == Material.PURPLE_SHULKER_BOX || blocktype == Material.PINK_SHULKER_BOX
+                || blocktype == Material.ORANGE_SHULKER_BOX || blocktype == Material.MAGENTA_SHULKER_BOX || blocktype == Material.LIME_SHULKER_BOX
+                || blocktype == Material.LIGHT_BLUE_SHULKER_BOX || blocktype == Material.GREEN_SHULKER_BOX || blocktype == Material.GRAY_SHULKER_BOX
+                || blocktype == Material.BLUE_SHULKER_BOX || blocktype == Material.CYAN_SHULKER_BOX || blocktype == Material.BROWN_SHULKER_BOX
+                || blocktype == Material.BLACK_SHULKER_BOX || blocktype == Material.DISPENSER || blocktype == Material.DROPPER
+                || blocktype == Material.HOPPER || blocktype == Material.BREWING_STAND) {
+            
+            
+            
+        }
+        
 
         // メインハンドに持っていた場合
         if (isMain) {
@@ -57,9 +81,9 @@ class Place : Listener {
                 itemInMainHand.amount = 1
 
                 if (triedTimes == 0 || triedTimes % 4 == 0) {
-                    player.sendMessage("${plugin.PREFIX_ERROR}アイテムを補充して下さい！")
+                    player.sendMessage("${SBUtil.errorPrefix}アイテムを補充して下さい！")
                 }
-                spawnSmoke(event.block.location)
+                SBUtil.spawnSmoke(event.block.location)
                 player.playSound(player.location, Sound.BLOCK_DISPENSER_FAIL, 0.4f, 1.0f)
                 
                 triedTimes++
@@ -87,9 +111,9 @@ class Place : Listener {
                 itemInOffHand.amount = 1
 
                 if (triedTimes == 0 || triedTimes % 4 == 0) {
-                    player.sendMessage("${plugin.PREFIX_ERROR}アイテムを補充して下さい！")
+                    player.sendMessage("${SBUtil.errorPrefix}アイテムを補充して下さい！")
                 }
-                spawnSmoke(event.block.location)
+                SBUtil.spawnSmoke(event.block.location)
                 player.playSound(player.location, Sound.BLOCK_DISPENSER_FAIL, 0.4f, 1.0f)
 
                 triedTimes++
@@ -105,10 +129,6 @@ class Place : Listener {
         
     }
     
-    private fun spawnSmoke(location: Location) {
-        location.world.playEffect(location.add(0.0, 1.0, 0.0), Effect.SMOKE, 4)
-    }
-
     /**
      * 音を再生します。
      * @param location 再生する位置
