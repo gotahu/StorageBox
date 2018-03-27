@@ -8,7 +8,11 @@ commands:
   storagebox:
     aliases: [sb]
     description: StorageBoxのコマンドです。
-    usage: /<command> [remove, create, info, edit]
+    usage: |
+           /<command> create      - 手に持っているアイテムのStorageBoxを作ります。
+           /<command> info        - StorageBoxの情報を取得します。
+           /<command> take <量>   - StorageBoxから指定した量のアイテムを取り出します。
+           /<command> owner <プレイヤー名> - StorageBoxの所有者を指定したプレイヤーに変更します。
   heal:
     description: 検証用回復コマンド
 
@@ -30,6 +34,9 @@ permissions:
     default: true
   sb.consume:
     description: consumeの使用権限
+    default: true
+  sb.owner:
+    description: ownerコマンドの使用権限
     default: true
   sb.use:
     children:
