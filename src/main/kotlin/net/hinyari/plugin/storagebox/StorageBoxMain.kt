@@ -70,6 +70,11 @@ class StorageBoxMain : JavaPlugin() {
                 meta.lore = listOf("§f右クリックでアイテムを登録")
                 registerChest.itemMeta = meta
 
+                val recipeList = server.getRecipesFor(registerChest)
+                if (recipeList.isNotEmpty()) {
+                    server.clearRecipes()
+                }
+
                 // レシピ作成部
                 val recipe1 = ShapedRecipe(namespacedKey, registerChest).shape("123", "456", "789")
 

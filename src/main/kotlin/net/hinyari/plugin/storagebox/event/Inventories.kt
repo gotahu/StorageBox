@@ -143,6 +143,10 @@ class Inventories : Listener {
         if (inventory == null) {
             return false
         }
+        if (inventory.location != null) {
+            return false
+        }
+        
         return inventory.name.contains("StorageBox : ")
     }
     
