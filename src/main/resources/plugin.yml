@@ -52,3 +52,6 @@ permissions:
   sb.heal:
     description: 検証用コマンド
     default: false
+  sb.modifyrecipe:
+    description: StorageBoxのレシピを変更する権限
+    default: op

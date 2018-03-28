@@ -1,7 +1,7 @@
 package net.hinyari.plugin.storagebox.event
 
-import net.hinyari.plugin.storagebox.NMS
-import net.hinyari.plugin.storagebox.SBUtil
+import net.hinyari.plugin.storagebox.Config
+import net.hinyari.plugin.storagebox.util.SBUtil
 import net.hinyari.plugin.storagebox.StorageBoxMain
 import org.bukkit.*
 import org.bukkit.block.Chest
@@ -37,6 +37,12 @@ class Place : Listener {
         if (!player.hasPermission("sb.place")) {
             player.sendMessage(SBUtil.noPermission)
             event.isCancelled = true
+            return
+        }
+        
+        // 無効化リストに入っていた場合
+        if (Config.values.uncreatableMaterialList.contains(event.itemInHand.type)) {
+            player.sendMessage("${SBUtil.errorPrefix}そのアイテムを設置することは出来ません!")
             return
         }
         

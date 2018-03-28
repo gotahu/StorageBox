@@ -1,5 +1,6 @@
 package net.hinyari.plugin.storagebox
 
+import net.hinyari.plugin.storagebox.util.SBUtil
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.Command
@@ -189,6 +190,12 @@ class Command : CommandExecutor {
                 }
                 
                 
+            } else if (args[0].equals("recipe", true)) {
+                if (player.hasPermission("sb.modifyrecipe")) {
+                    player.openInventory(plugin.inventoryUtil.recipeRegister)
+                } else {
+                    player.sendMessage(SBUtil.noPermission)
+                }
             }
         }
 

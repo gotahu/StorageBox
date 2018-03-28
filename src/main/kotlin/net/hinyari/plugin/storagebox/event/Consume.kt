@@ -1,9 +1,8 @@
 package net.hinyari.plugin.storagebox.event
 
-import net.hinyari.plugin.storagebox.SBUtil
+import net.hinyari.plugin.storagebox.util.SBUtil
 import net.hinyari.plugin.storagebox.StorageBoxMain
 import org.bukkit.Material
-import org.bukkit.entity.Item
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerItemConsumeEvent

@@ -1,6 +1,6 @@
 package net.hinyari.plugin.storagebox.event
 
-import net.hinyari.plugin.storagebox.SBUtil
+import net.hinyari.plugin.storagebox.util.SBUtil
 import net.hinyari.plugin.storagebox.StorageBoxMain
 import org.bukkit.Material
 import org.bukkit.Sound

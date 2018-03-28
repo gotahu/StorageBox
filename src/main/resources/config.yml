@@ -1,0 +1,26 @@
+# 
+# 
+#     Bukkit/Spigot Plugin [ StorageBox ] Config File
+#     * Author : Hinyari_Gohan
+#     * License : MIT
+#
+#
+
+# 無効化したいブロック・アイテムのMaterialを書くことで、StorageBoxの使用・作成などを防ぎます。
+# By writing the name of material that you want to disable, creating and crafting StorageBox are blocked.
+# (ref: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html )
+disableMaterial:
+  - BEDROCK # 岩盤
+  #- STONE
+
+crafting:
+  # クラフトでStorageBoxを作ることを許可するか
+  # Allow crafting StorageBox on a workbench
+  enable: true
+  
+  # StorageBoxのレシピ、作成するにはコマンドを利用して下さい。
+  # Recipes of StorageBox, execute commands to create.
+  recipes:
+  
+
+

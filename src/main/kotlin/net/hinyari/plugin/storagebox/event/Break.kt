@@ -1,7 +1,6 @@
 package net.hinyari.plugin.storagebox.event
 
-import net.hinyari.plugin.storagebox.SBUtil
-import net.hinyari.plugin.storagebox.StorageBoxMain
+import net.hinyari.plugin.storagebox.util.SBUtil
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener

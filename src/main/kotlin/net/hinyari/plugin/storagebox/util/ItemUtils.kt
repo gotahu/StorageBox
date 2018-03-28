@@ -72,7 +72,7 @@ class ItemUtils {
          * @param color
          * @return
          */
-        fun createWoolItem(material: Material, name: String, desc: Array<String>, color: Byte): ItemStack {
+        fun createColorableItem(material: Material, name: String, desc: Array<String>, color: Byte): ItemStack {
             val item = ItemStack(material, 1, color.toShort())
             val meta = item.itemMeta
 
@@ -89,7 +89,7 @@ class ItemUtils {
          * @param color
          * @return
          */
-        fun createWoolItem(material: Material, name: String, color: Byte): ItemStack {
+        fun createColorableItem(material: Material, name: String, color: Byte): ItemStack {
             val item = ItemStack(material, 1, color.toShort())
             val meta = item.itemMeta
 
