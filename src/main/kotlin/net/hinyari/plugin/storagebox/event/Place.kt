@@ -28,6 +28,11 @@ class Place : Listener {
 
         val hasStorageBox = isMain || SBUtil.isStorageBox(itemInOffHand)
 
+        // 未登録のStorageBoxだったら
+        if (event.itemInHand.hasItemMeta() && event.itemInHand.itemMeta.displayName == "§6§lStorageBox : §r§6未登録") {
+            event.isCancelled = true
+        }
+
         // StorageBoxを持っていなかった場合
         if (!hasStorageBox) {
             return
@@ -47,28 +52,7 @@ class Place : Listener {
         }
         
         val block = event.block
-        val blocktype = block.type
-        
-        if (blocktype == Material.CHEST) {
-            val chest : Chest = block.state as Chest
-            //val craftItemStack = nms.getNMSClass("CraftItemStack").getConstructor()
-            //chest.customName = nms.getNMSClass("CraftItemStack").as
-        }
-        
-        // 内部にインベントリを持つアイテム
-        if (blocktype == Material.FURNACE || blocktype == Material.ENCHANTMENT_TABLE || 
-                blocktype == Material.WHITE_SHULKER_BOX || blocktype == Material.YELLOW_SHULKER_BOX || blocktype == Material.SILVER_SHULKER_BOX
-                || blocktype == Material.RED_SHULKER_BOX || blocktype == Material.PURPLE_SHULKER_BOX || blocktype == Material.PINK_SHULKER_BOX
-                || blocktype == Material.ORANGE_SHULKER_BOX || blocktype == Material.MAGENTA_SHULKER_BOX || blocktype == Material.LIME_SHULKER_BOX
-                || blocktype == Material.LIGHT_BLUE_SHULKER_BOX || blocktype == Material.GREEN_SHULKER_BOX || blocktype == Material.GRAY_SHULKER_BOX
-                || blocktype == Material.BLUE_SHULKER_BOX || blocktype == Material.CYAN_SHULKER_BOX || blocktype == Material.BROWN_SHULKER_BOX
-                || blocktype == Material.BLACK_SHULKER_BOX || blocktype == Material.DISPENSER || blocktype == Material.DROPPER
-                || blocktype == Material.HOPPER || blocktype == Material.BREWING_STAND) {
-            
-            
-            
-        }
-        
+        val blocktype = block.type        
 
         // メインハンドに持っていた場合
         if (isMain) {

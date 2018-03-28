@@ -138,9 +138,7 @@ class SBUtil {
          * @param   amount      渡したい個数
          */
         fun giveItemToPlayer(player: Player, itemStack: ItemStack, amount: Int) {
-            
-            println(countEmptySlots(player.inventory))
-            
+                       
             val world = player.world
             val location = player.location
             
@@ -293,7 +291,7 @@ class SBUtil {
         }
                 
         private fun countEmptySlots(inventory: Inventory) : Int {
-            return 36 - inventory.contents.size
+            return 45 - inventory.contents.size
         }
 
 

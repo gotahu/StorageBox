@@ -56,20 +56,22 @@ class StorageBoxMain : JavaPlugin() {
     private fun init() {
         reloadRecipe()
     }
+    
+    lateinit var registerChest : ItemStack
 
     fun reloadRecipe() {
         if (Config.values.enableCraftingStorageBox) {
             val rawRecipe = Config.values.recipe
             if (rawRecipe.isNotEmpty()) {
                 // 完成品
-                val chestItemStack = ItemStack(Material.CHEST)
-                val meta = chestItemStack.itemMeta
+                registerChest = ItemStack(Material.CHEST)
+                val meta = registerChest.itemMeta
                 meta.displayName = "§6§lStorageBox : §r§6未登録"
                 meta.lore = listOf("§f右クリックでアイテムを登録")
-                chestItemStack.itemMeta = meta
+                registerChest.itemMeta = meta
 
                 // レシピ作成部
-                val recipe1 = ShapedRecipe(namespacedKey, chestItemStack).shape("123", "456", "789")
+                val recipe1 = ShapedRecipe(namespacedKey, registerChest).shape("123", "456", "789")
 
                 for (i in 1 until 10) {
                     recipe1.setIngredient(i.toString().toCharArray()[0], rawRecipe[i - 1].data)

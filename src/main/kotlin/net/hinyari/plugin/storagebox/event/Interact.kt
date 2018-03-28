@@ -23,10 +23,12 @@ class Interact : Listener {
         val interactedItem = event.item
         
         if (interactedItem != null && interactedItem.hasItemMeta() &&
-                interactedItem.itemMeta.displayName == "§6§lStorageBox : §r§6未登録") {
+                interactedItem.itemMeta.displayName == "§6§lStorageBox : §r§6未登録" &&
+                (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR)) {
             
             // 他メソッドに移管
             interactWithUnregisteredStorageBox(event)
+            event.isCancelled = true
             return
         }
         
@@ -89,13 +91,9 @@ class Interact : Listener {
                     interactedItem.amount = 1
                     return
                 }
-                
-                
-                //val isMainHand = player.inventory.itemInMainHand == item
-                
+                                
                 // ここで取得しないと消える
                 val amount = SBUtil.getAmountOfStorageBox(interactedItem)
-                
                 
                 // 時間をつけて実行する
                 object : BukkitRunnable() {
@@ -130,7 +128,6 @@ class Interact : Listener {
     private fun interactWithUnregisteredStorageBox(event: PlayerInteractEvent) {
         val player = event.player
         player.openInventory(inventoryUtil.getRegisterInventoryByUUID(player.uniqueId))
-        
     }
     
 }

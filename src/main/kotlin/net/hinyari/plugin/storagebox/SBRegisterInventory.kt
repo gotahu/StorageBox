@@ -1,7 +1,6 @@
 package net.hinyari.plugin.storagebox
 
 import ItemUtils
-import com.sun.org.apache.regexp.internal.RE
 import org.bukkit.Bukkit
 import org.bukkit.DyeColor
 import org.bukkit.Material
@@ -11,13 +10,31 @@ import java.util.*
 
 class SBRegisterInventory {
 
-    private val registerInventory = Bukkit.createInventory(null, 27, "StorageBox : 登録")
+    private val registerInventory : Inventory
     val recipeRegister: Inventory
     val inventories = mutableMapOf<UUID, Inventory>()
 
     init {
+        // StorageBox登録インベントリセットアップ
+        /*
+        blackpane 2, 20, 10, 12
+        slot 11
+        button 15
+         */
+        registerInventory = fillInventory(Bukkit.createInventory(null, 27, "StorageBox : アイテム登録"), 
+                ItemUtils.createColorableItem(Material.STAINED_GLASS_PANE, "", emptyArray(), DyeColor.GRAY.woolData))
+        val blackPane = ItemUtils.createColorableItem(Material.STAINED_GLASS_PANE, "", emptyArray(), DyeColor.BLACK.woolData)
+        registerInventory.setItem(2, blackPane)
+        registerInventory.setItem(10, blackPane)
+        registerInventory.setItem(12, blackPane)
+        registerInventory.setItem(20, blackPane)
+        registerInventory.setItem(11, ItemStack(Material.AIR))
+        registerInventory.setItem(15, ItemUtils.createColorableItem(Material.STAINED_CLAY, "§a§lOK", emptyArray(), DyeColor.LIME.woolData))
+        
+        
+        
         // レシピ登録インベントリセットアップ
-        recipeRegister = fillInventory(Bukkit.createInventory(null, 27, "Storagebox : レシピ作成"),
+        recipeRegister = fillInventory(Bukkit.createInventory(null, 27, "StorageBox : レシピ作成"),
                 ItemUtils.createColorableItem(Material.STAINED_GLASS_PANE, "", arrayOf(""), DyeColor.GRAY.woolData))
 
         recipeRegister.setItem(15,
