@@ -12,6 +12,11 @@
 disableMaterial:
   - BEDROCK # 岩盤
   #- STONE
+  
+prefix:
+  normal: "&a&l[ StorageBox ]&r "
+  error: "&c&l[ StorageBox ]&r "
+  noPermission: "このコマンドを実行する権限がありません!"
 
 crafting:
   # クラフトでStorageBoxを作ることを許可するか

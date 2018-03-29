@@ -1,6 +1,6 @@
 package net.hinyari.plugin.storagebox.event
 
-import net.hinyari.plugin.storagebox.util.SBUtil
+import net.hinyari.plugin.storagebox.extensions.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -12,12 +12,11 @@ class Break : Listener {
     fun onBlockBreakEvent(event: BlockBreakEvent) {
         val player = event.player
 
-        if (SBUtil.isStorageBox(player.inventory.itemInMainHand) &&
-                ItemUtils.isTool(player.inventory.itemInMainHand)) {
+        if (player.itemInMainHand.isStorageBox() && player.itemInMainHand.type.isTool) {
             // イベントをキャンセル
             event.isCancelled = true
-            player.sendMessage("${SBUtil.errorPrefix}アイテムをStorageBoxから取り出して使用して下さい!")
-            SBUtil.spawnSmoke(event.block.location)
+            player.sendMessageWithErrorPrefix("アイテムをStorageBoxから取り出して使用して下さい!")
+            event.block.location.spawnSmoke()
         }
     }
 

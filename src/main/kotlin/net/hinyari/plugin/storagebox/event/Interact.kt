@@ -1,133 +1,68 @@
 package net.hinyari.plugin.storagebox.event
 
-import net.hinyari.plugin.storagebox.util.SBUtil
 import net.hinyari.plugin.storagebox.StorageBoxMain
+import net.hinyari.plugin.storagebox.extensions.*
+import net.hinyari.plugin.storagebox.util.SBUtil
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.inventory.EquipmentSlot
 
-class Interact : Listener {
-    
+class Interact constructor(val plugin: StorageBoxMain) : Listener {
+
     // StorageBoxの使用に対応するアイテム
-    private var materialArray = arrayOf(Material.ENDER_PEARL, Material.MINECART, Material.WATER_BUCKET, Material.LAVA_BUCKET)
-    private val plugin =  StorageBoxMain.instance 
+    private var materialArray = arrayOf(Material.ENDER_PEARL, Material.MINECART, Material.WATER_BUCKET,
+            Material.LAVA_BUCKET)
     private val inventoryUtil = plugin.inventoryUtil
-    
+
     @EventHandler
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
+
+        val item = event.item
+        val player = event.player
         
-        val interactedItem = event.item
-        
-        if (interactedItem != null && interactedItem.hasItemMeta() &&
-                interactedItem.itemMeta.displayName == "§6§lStorageBox : §r§6未登録" &&
-                (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR)) {
-            
-            // 他メソッドに移管
-            interactWithUnregisteredStorageBox(event)
+        if (item == null) return
+
+        if (item.hasItemMeta() && item.itemMeta.displayName == "§6§lStorageBox : §r§6未登録" 
+                && (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR)) {
+
+            player.openInventory(inventoryUtil.getRegisterInventoryByUUID(player.uniqueId))
             event.isCancelled = true
             return
         }
-        
-        
-        // StorageBoxじゃなかったら論外
-        if (!SBUtil.isStorageBox(interactedItem)) {
+
+        // StorageBoxじゃない
+        if (item.isNotStorageBox()) {
             return
         }
         
-        val player = event.player
-        
-        
-        val isMainHand = player.inventory.itemInMainHand == interactedItem
-        
-        // 持っている物がStorageBoxであった
-        //if (SBUtil.isStorageBox(event.item)) {
+        val isMainHand = event.hand == EquipmentSlot.HAND
 
-            //val item = event.item
-            val material = interactedItem.type
-            //val player = event.player
-        
         // スニーク中
         if (player.isSneaking) {
-            
+            // アイテムを取り出す処理
             if (event.action == Action.LEFT_CLICK_AIR || event.action == Action.LEFT_CLICK_BLOCK) { // 左クリ
-                val amount = SBUtil.getAmountOfStorageBox(interactedItem)
-                
-                if (amount <= 0) {
-                    return
-                }
-                
-                // メインハンドにStorageBoxを所持している場合
-                when {
-                    isMainHand -> 
-                        player.inventory.itemInMainHand = SBUtil.createStorageBox(interactedItem, amount - 1, player)
-                    
-                    player.inventory.itemInOffHand == event.item -> 
-                        player.inventory.itemInOffHand = SBUtil.createStorageBox(interactedItem, amount - 1, player)
-                    else -> return
-                }
+                val amount = SBUtil.getAmountOfStorageBox(item)
+                // 0個なら無視
+                if (amount <= 0) return
 
-                SBUtil.giveItemToPlayer(player, interactedItem, 1)
+                // メインハンドにStorageBoxを所持している場合
+                if (isMainHand) player.itemInMainHand = item.toStorageBox(amount - 1)
+                else player.itemInOffHand = item.toStorageBox(amount - 1)
+
+                player.giveItem(item.reset(), 1)
                 player.playSound(player.location, Sound.ENTITY_ITEM_PICKUP, 0.2f, 0.5f)
-                
+
             } else if (event.action == Action.RIGHT_CLICK_AIR || event.action == Action.RIGHT_CLICK_BLOCK) { // 右クリ
                 // StorageBoxにまとめる
-                if (SBUtil.stackToStorageBox(player, interactedItem) /* ここでまとめる 兼 まとめるアイテムがあったかチェック */) {
+                if (SBUtil.stackToStorageBox(player, item) /* ここでまとめる 兼 まとめるアイテムがあったかチェック */) {
                     player.playSound(player.location, Sound.BLOCK_DISPENSER_DISPENSE, 1.0f, 1.5f)
                 }
             }
+            return
         }
-            
-            // 対応しているアイテムである
-            if (materialArray.contains(material)) {
-                
-                // 個数がない
-                if (SBUtil.getAmountOfStorageBox(interactedItem) <= 0) {
-                    event.isCancelled = true
-                    player.sendMessage("${SBUtil.errorPrefix}アイテムを補充して下さい！")
-                    interactedItem.amount = 1
-                    return
-                }
-                                
-                // ここで取得しないと消える
-                val amount = SBUtil.getAmountOfStorageBox(interactedItem)
-                
-                // 時間をつけて実行する
-                object : BukkitRunnable() {
-                    override fun run() {
-                        
-                        val minusOne = amount -1                        
-                        val afterItem = SBUtil.createStorageBox(interactedItem, minusOne, player)
-                        
-                        // メインハンドにStorageBoxがある場合
-                        when {
-                            isMainHand -> {
-                                player.inventory.itemInMainHand = afterItem
-                            }
-                            player.inventory.itemInOffHand == event.item -> {
-                                player.inventory.itemInOffHand = afterItem
-                            }
-                            else -> return
-                        }
-                        
-                        interactedItem.amount = 1
-                        
-                    }
-                }.runTaskLater(plugin, 1L) // 1tick後
-                
-            }
-            
-        //}
-        
-        
     }
-    
-    private fun interactWithUnregisteredStorageBox(event: PlayerInteractEvent) {
-        val player = event.player
-        player.openInventory(inventoryUtil.getRegisterInventoryByUUID(player.uniqueId))
-    }
-    
 }

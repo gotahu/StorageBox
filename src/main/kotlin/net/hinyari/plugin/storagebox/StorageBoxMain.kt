@@ -4,11 +4,9 @@ import net.hinyari.plugin.storagebox.event.*
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.command.CommandExecutor
-import org.bukkit.entity.Player
+import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.material.MaterialData
 import org.bukkit.plugin.java.JavaPlugin
 
 class StorageBoxMain : JavaPlugin() {
@@ -21,39 +19,35 @@ class StorageBoxMain : JavaPlugin() {
 
     override fun onEnable() {
         // 順番大事
-        instance = this
-        config = Config()
+        config = Config(this)
         inventoryUtil = SBRegisterInventory()
 
         init()
-        getCommand("storagebox").executor = Command()
-
-        getCommand("heal").executor = CommandExecutor { sender, _, _, _ ->
-            if (sender is Player) {
-                val player: Player = sender
-
-                if (player.hasPermission("sb.heal")) {
-                    player.health = 20.0
-                    player.sendMessage("&6You've been healed!")
-                }
-
-                return@CommandExecutor true
-            }
-            return@CommandExecutor true
-        }
-
-        val pm = Bukkit.getPluginManager()
-        pm.registerEvents(Place(), this)
-        pm.registerEvents(Pickup(), this)
-        pm.registerEvents(Consume(), this)
-        pm.registerEvents(Interact(), this)
-        pm.registerEvents(Break(), this)
-        pm.registerEvents(Inventories(), this)
-
-        logger.info(ItemUtils.getItemOriginalName(ItemStack(Material.WOOD)))
+        getCommand("storagebox").executor = Command(this)
+        
+        registerListeners(
+                Place(this),
+                Pickup(this),
+                Consume(this),
+                Interact(this),
+                Break(),
+                Inventories(this))
+    }
+    
+    private fun registerListeners(vararg listeners : Listener) {
+        val pm = server.pluginManager
+        listeners.forEach { listener -> pm.registerEvents(listener, this)
+        log.info("${listener.javaClass.name} is registered.")}
     }
 
     private fun init() {
+        // 完成品
+        registerChest = ItemStack(Material.CHEST)
+        val meta = registerChest.itemMeta
+        meta.displayName = "§6§lStorageBox : §r§6未登録"
+        meta.lore = listOf("§f右クリックでアイテムを登録")
+        registerChest.itemMeta = meta
+        
         reloadRecipe()
     }
     
@@ -63,13 +57,6 @@ class StorageBoxMain : JavaPlugin() {
         if (Config.values.enableCraftingStorageBox) {
             val rawRecipe = Config.values.recipe
             if (rawRecipe.isNotEmpty()) {
-                // 完成品
-                registerChest = ItemStack(Material.CHEST)
-                val meta = registerChest.itemMeta
-                meta.displayName = "§6§lStorageBox : §r§6未登録"
-                meta.lore = listOf("§f右クリックでアイテムを登録")
-                registerChest.itemMeta = meta
-
                 val recipeList = server.getRecipesFor(registerChest)
                 if (recipeList.isNotEmpty()) {
                     server.clearRecipes()
@@ -86,12 +73,16 @@ class StorageBoxMain : JavaPlugin() {
                 server.addRecipe(recipe1)
 
                 log.info("レシピを追加しました！")
+            } else {
+                log.info("レシピが追加されていません。/sb recipeで設定をして下さい。")
             }
+        } else {
+            log.info("レシピは無効化されました。")
         }
     }
 
 
-    var debugMode: Boolean = false
+    private var debugMode: Boolean = false
 
     fun debug(string: String) {
         if (debugMode) {
@@ -103,10 +94,4 @@ class StorageBoxMain : JavaPlugin() {
         debugMode = !debugMode
         return debugMode
     }
-
-    companion object {
-        lateinit var instance: StorageBoxMain
-    }
-
-
 }

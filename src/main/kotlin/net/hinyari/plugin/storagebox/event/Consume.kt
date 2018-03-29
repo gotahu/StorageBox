@@ -2,6 +2,7 @@ package net.hinyari.plugin.storagebox.event
 
 import net.hinyari.plugin.storagebox.util.SBUtil
 import net.hinyari.plugin.storagebox.StorageBoxMain
+import net.hinyari.plugin.storagebox.extensions.*
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -9,39 +10,30 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class Consume : Listener {
-    
-    
-    private val plugin = StorageBoxMain.instance
-    
+class Consume constructor(val plugin: StorageBoxMain)  : Listener {
+        
     @EventHandler
     fun onPlayerItemConsumeEvent(event: PlayerItemConsumeEvent) {
         
         val player = event.player
+        val consumedItem = event.item
                 
-        if (!SBUtil.isStorageBox(event.item)) {
+        if (consumedItem.isNotStorageBox()) {
             return
         }
         
         if (!player.hasPermission("sb.consume")) {
-            player.sendMessage("${SBUtil.errorPrefix}権限がありません。")
             event.isCancelled = true
-            return
+            player.sendMessageWithErrorPrefix(SBUtil.noPermission)
+            return 
         }
         
-        val consumedItem = event.item
-        
-        val isMainHand = player.inventory.itemInMainHand == event.item
-
-        if (SBUtil.getOwnerOfStorageBox(consumedItem) != player) {
-            player.sendMessage("${SBUtil.errorPrefix}所有者の異なるStorageBoxのアイテムを消費することは出来ません！")
-            player.sendMessage("${SBUtil.prefix}所有者を変更するには [/sb owner <変更したい所有者名>] を実行して下さい。")
-        }
+        val isMainHand = player.itemInMainHand == event.item
         
         // オメーのStorageBoxの容量０以下だからぁ！！
         if (SBUtil.getAmountOfStorageBox(consumedItem) <= 0) {
             event.isCancelled = true
-            player.sendMessage("${SBUtil.errorPrefix}アイテムを補充して下さい！")
+            player.sendMessageWithErrorPrefix("アイテムを補充して下さい！")
             consumedItem.amount = 1
             
             return
@@ -52,29 +44,21 @@ class Consume : Listener {
         object : BukkitRunnable() {
             override fun run() {
                 if (isMainHand) {
-                    player.inventory.itemInMainHand = 
-                            SBUtil.createStorageBox(consumedItem, SBUtil.getAmountOfStorageBox(consumedItem) - 1, player)
-                    //player.inventory.itemInMainHand.amount = 1
-                } else if (player.inventory.itemInOffHand == event.item){
-                    player.inventory.itemInOffHand = 
-                            SBUtil.createStorageBox(consumedItem, SBUtil.getAmountOfStorageBox(consumedItem) - 1, player)
+                    player.itemInMainHand = consumedItem.toStorageBox(SBUtil.getAmountOfStorageBox(consumedItem) - 1)
+                    //player.itemInMainHand.amount = 1
+                } else if (player.itemInOffHand == event.item){
+                    player.itemInOffHand = consumedItem.toStorageBox(SBUtil.getAmountOfStorageBox(consumedItem) - 1)
                     
-                    //player.inventory.itemInOffHand.amount = 1
+                    //player.itemInOffHand.amount = 1
                 }
                 
+                // TODO: 他にも消費アイテム調査
                 if (consumedItem.type == Material.MILK_BUCKET) {
-                    SBUtil.giveItemToPlayer(player, ItemStack(Material.BUCKET), 1)
+                    player.giveItem(ItemStack(Material.BUCKET), 1)
                 }
                 
                 consumedItem.amount = 1
-                
             }
         }.runTaskLater(plugin, 1L)
-        
-        
-        
-        
     }
-    
-    
 }

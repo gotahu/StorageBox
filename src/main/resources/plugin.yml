@@ -1,5 +1,5 @@
 name: StorageBox
-version: 1.0a
+version: 3.0.1
 description: StorageBoxを追加します。
 author: Hinyari_Gohan
 main: net.hinyari.plugin.storagebox.StorageBoxMain
@@ -13,8 +13,6 @@ commands:
            /<command> info        - StorageBoxの情報を取得します。
            /<command> take <量>   - StorageBoxから指定した量のアイテムを取り出します。
            /<command> owner <プレイヤー名> - StorageBoxの所有者を指定したプレイヤーに変更します。
-  heal:
-    description: 検証用回復コマンド
 
 permissions:
   sb.create:
@@ -48,9 +46,6 @@ permissions:
       sb.consume: true
   sb.debug:
     description: デバッグを表示する権限
-    default: false
-  sb.heal:
-    description: 検証用コマンド
     default: false
   sb.modifyrecipe:
     description: StorageBoxのレシピを変更する権限

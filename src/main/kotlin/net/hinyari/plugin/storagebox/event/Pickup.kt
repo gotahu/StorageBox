@@ -2,6 +2,7 @@ package net.hinyari.plugin.storagebox.event
 
 import net.hinyari.plugin.storagebox.util.SBUtil
 import net.hinyari.plugin.storagebox.StorageBoxMain
+import net.hinyari.plugin.storagebox.extensions.*
 import org.bukkit.Sound
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -10,72 +11,55 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityPickupItemEvent
 
-class Pickup : Listener {
+class Pickup constructor(val plugin: StorageBoxMain) : Listener {
 
-    private val plugin = StorageBoxMain.instance
+    private var triedtimes = 0
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun onPlayerPickupItemEvent(event: EntityPickupItemEvent) {
-        
+
         if (event.entityType != EntityType.PLAYER) {
             return
         }
 
         val player: Player = event.entity as Player
+        val pickedItem = event.item.itemStack
 
-        if (!player.hasPermission("sb.pickup")) {
+        // 拾えないようにする
+        if (!player.hasPermission("sb.pickup") && pickedItem.isStorageBox()) {
+            event.isCancelled = true
             return
         }
 
-        val pickedItem = event.item.itemStack
-
         for (item in player.inventory.contents) {
-            // アイテムが存在しない、メタを有しない、ストレージボックスではない
-            if (item == null || !item.hasItemMeta() || (item.hasItemMeta() && (!SBUtil.isStorageBox(item)))) {
+            // アイテムが存在しない、またはストレージボックスではない
+            if (item == null || item.isNotStorageBox()) {
                 continue
             }
-            
-            val sbmaterial = SBUtil.getTypeOfStorageBox(item)
 
             // ストレージボックスの内容と合っているか
-            if (item.type == pickedItem.type &&
-                            item.data.data == pickedItem.data.data &&
-                            item.durability == pickedItem.durability &&
-                            item.enchantments == pickedItem.enchantments) {
+            if (item.type == pickedItem.type && // Material
+                    item.data.data == pickedItem.data.data &&  // DyeColor等
+                    item.durability == pickedItem.durability && // 耐久値  
+                    item.enchantments == pickedItem.enchantments) { // エンチャント
 
-
-                val afteramount: Int =
-                        // StorageBoxを拾った
-                        if (SBUtil.isStorageBox(pickedItem)) {
-                            // 所有者が同じ
-                            if (SBUtil.getOwnerOfStorageBox(item) == SBUtil.getOwnerOfStorageBox(pickedItem)) {
-                                SBUtil.getAmountOfStorageBox(item) + SBUtil.getAmountOfStorageBox(pickedItem)
-                            } else {
-                                player.sendMessage("${SBUtil.errorPrefix}所有者の異なるStorageBoxをまとめる事は出来ません。")
-                                player.sendMessage("${SBUtil.prefix}所有者を変更するには [/sb owner <新しい所有者名>] を実行します。")
-                                return
-                            }
-
-                        } else { // そうでなければ普通に追加するだけ
-                            SBUtil.getAmountOfStorageBox(item) + pickedItem.amount
-                        }
-
-                // イベントをキャンセルする
                 event.isCancelled = true
 
-                // StorageBoxを編集する
-                SBUtil.createStorageBox(item, afteramount, player)
-                // キャンセルして音が鳴らないので鳴らす
-                player.playSound(player.location, Sound.ENTITY_ITEM_PICKUP, 0.2f, 2.0f)
 
                 // アイテムのエンティティを消去
                 event.item.remove()
 
+                // 拾った後の数
+                val afterAmount: Int = if (pickedItem.isStorageBox())
+                    SBUtil.getAmountOfStorageBox(item) + SBUtil.getAmountOfStorageBox(pickedItem)
+                else SBUtil.getAmountOfStorageBox(item) + pickedItem.amount
+                
+                // StorageBoxを編集する
+                item.toStorageBox(afterAmount)
+
+                // キャンセルして音が鳴らないので鳴らす
+                player.playSound(player.location, Sound.ENTITY_ITEM_PICKUP, 0.2f, 2.0f)
             }
-
-
         }
-
     }
-
 }

@@ -1,6 +1,5 @@
 package net.hinyari.plugin.storagebox
 
-import ItemUtils
 import org.bukkit.Bukkit
 import org.bukkit.DyeColor
 import org.bukkit.Material
@@ -12,7 +11,7 @@ class SBRegisterInventory {
 
     private val registerInventory : Inventory
     val recipeRegister: Inventory
-    val inventories = mutableMapOf<UUID, Inventory>()
+    private val inventories = mutableMapOf<UUID, Inventory>()
 
     init {
         // StorageBox登録インベントリセットアップ
@@ -22,23 +21,23 @@ class SBRegisterInventory {
         button 15
          */
         registerInventory = fillInventory(Bukkit.createInventory(null, 27, "StorageBox : アイテム登録"), 
-                ItemUtils.createColorableItem(Material.STAINED_GLASS_PANE, "", emptyArray(), DyeColor.GRAY.woolData))
-        val blackPane = ItemUtils.createColorableItem(Material.STAINED_GLASS_PANE, "", emptyArray(), DyeColor.BLACK.woolData)
+                createColorableItem(Material.STAINED_GLASS_PANE, "", DyeColor.GRAY.woolData))
+        val blackPane = createColorableItem(Material.STAINED_GLASS_PANE, "", DyeColor.BLACK.woolData)
         registerInventory.setItem(2, blackPane)
         registerInventory.setItem(10, blackPane)
         registerInventory.setItem(12, blackPane)
         registerInventory.setItem(20, blackPane)
         registerInventory.setItem(11, ItemStack(Material.AIR))
-        registerInventory.setItem(15, ItemUtils.createColorableItem(Material.STAINED_CLAY, "§a§lOK", emptyArray(), DyeColor.LIME.woolData))
+        registerInventory.setItem(15, createColorableItem(Material.STAINED_CLAY, "§a§lOK", DyeColor.LIME.woolData))
         
         
         
         // レシピ登録インベントリセットアップ
         recipeRegister = fillInventory(Bukkit.createInventory(null, 27, "StorageBox : レシピ作成"),
-                ItemUtils.createColorableItem(Material.STAINED_GLASS_PANE, "", arrayOf(""), DyeColor.GRAY.woolData))
+                createColorableItem(Material.STAINED_GLASS_PANE, "", DyeColor.GRAY.woolData))
 
         recipeRegister.setItem(15,
-                ItemUtils.createColorableItem(Material.STAINED_CLAY, "§a§lOK", arrayOf(""), DyeColor.LIME.woolData))
+                createColorableItem(Material.STAINED_CLAY, "§a§lOK", DyeColor.LIME.woolData))
         
         val recipes = Config.values.recipe
         val rrArray = arrayOf(1,2,3,10,11,12,19,20,21)
@@ -65,6 +64,22 @@ class SBRegisterInventory {
             inventory.setItem(i, itemStack)
         }
         return inventory
+    }
+
+    /**
+     * @param material
+     * @param name
+     * @param color
+     * @return
+     */
+    private fun createColorableItem(material: Material, name: String, color: Byte): ItemStack {
+        val item = ItemStack(material, 1, color.toShort())
+        val meta = item.itemMeta
+
+        meta.displayName = name
+
+        item.itemMeta = meta
+        return item
     }
 
 

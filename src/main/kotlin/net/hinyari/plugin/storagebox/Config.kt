@@ -2,16 +2,14 @@ package net.hinyari.plugin.storagebox
 
 import org.bukkit.Material
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class Config {
+class Config constructor(val plugin: StorageBoxMain) {
     
-    private val plugin : StorageBoxMain = StorageBoxMain.instance
     private val logger = plugin.log
         
-    var config: FileConfiguration
+    private var config: FileConfiguration
     private set
     
     companion object {
@@ -28,7 +26,7 @@ class Config {
         values = ConfigValues()
     }
 
-    fun exists(path: String) : Boolean {
+    private fun exists(path: String) : Boolean {
         return config.contains(path)
     }
     
