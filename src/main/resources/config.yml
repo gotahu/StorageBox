@@ -17,6 +17,10 @@ prefix:
   normal: "&a&l[ StorageBox ]&r "
   error: "&c&l[ StorageBox ]&r "
   noPermission: "このコマンドを実行する権限がありません!"
+  
+sound:
+  # 十分なアイテムがない場合
+  noEnoughItems: [BLOCK_DISPENSER_FAIL, 0.4, 1.0]
 
 crafting:
   # クラフトでStorageBoxを作ることを許可するか

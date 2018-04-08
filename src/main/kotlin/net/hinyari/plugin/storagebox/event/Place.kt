@@ -37,7 +37,8 @@ class Place constructor(val plugin: StorageBoxMain) : Listener {
 
         // 無効化リストに入っていた場合
         if (Config.values.uncreatableMaterialList.contains(event.itemInHand.type)) {
-            player.sendMessageWithErrorPrefix("そのアイテムを設置することは出来ません。")
+            player.sendActionBar("&cそのアイテムを設置することは出来ません")
+            event.isCancelled = true
             return
         }
 

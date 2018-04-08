@@ -52,6 +52,7 @@ fun ItemStack.toStorageBox(amount: Int): ItemStack {
     }
     
     if (type == Material.AIR) {
+        println("toStorageBox() {type=$type}")
         return ItemStack(Material.AIR)
     }
 
