@@ -1,5 +1,5 @@
 name: StorageBox
-version: 3.0.1
+version: 3.0.2
 description: StorageBoxを追加します。
 author: Hinyari_Gohan
 main: net.hinyari.plugin.storagebox.StorageBoxMain
@@ -21,9 +21,6 @@ permissions:
   sb.info:
     description: infoコマンドの使用権限
     default: true
-  sb.remove:
-    description: removeコマンドの使用権限
-    default: true
   sb.pickup:
     description: pickupの使用権限
     default: true
@@ -33,14 +30,10 @@ permissions:
   sb.consume:
     description: consumeの使用権限
     default: true
-  sb.owner:
-    description: ownerコマンドの使用権限
-    default: true
   sb.use:
     children:
       sb.create: true
       sb.info: true
-      sb.remove: true
       sb.pickup: true
       sb.place: true
       sb.consume: true

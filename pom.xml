@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.hinyari.plugin.storagebox.StorageBoxMain</groupId>
     <artifactId>StorageBox</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
 
     <properties>
         <kotlin.version>1.2.31</kotlin.version>

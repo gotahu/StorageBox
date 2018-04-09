@@ -5,6 +5,7 @@ import net.hinyari.plugin.storagebox.extensions.*
 import net.hinyari.plugin.storagebox.util.SBUtil
 import org.bukkit.Sound
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
@@ -14,7 +15,7 @@ class Interact constructor(val plugin: StorageBoxMain) : Listener {
     
     private val inventoryUtil = plugin.inventoryUtil
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     fun onPlayerInteractEvent(event: PlayerInteractEvent) {
 
         val item = event.item
@@ -66,21 +67,5 @@ class Interact constructor(val plugin: StorageBoxMain) : Listener {
             player.playSound(player.location, Sound.BLOCK_NOTE_BASS, 0.2f, 0.4f)
             return
         }
-        
-        /*
-        when (item.type) {
-            Material.ENDER_PEARL -> {
-                object : BukkitRunnable() {
-                    override fun run() {
-                        // メインハンドにStorageBoxを所持している場合
-                        if (isMainHand) player.itemInMainHand = item.toStorageBox(amount - 1)
-                        else player.itemInOffHand = item.toStorageBox(amount - 1)
-                    }
-                }.runTaskLater(plugin, 1L)
-            }
-            
-            else -> return
-        }
-        */
     }
 }

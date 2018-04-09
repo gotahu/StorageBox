@@ -8,6 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.plugin.java.JavaPlugin
+import java.awt.Shape
 
 class StorageBoxMain : JavaPlugin() {
 
@@ -56,10 +57,18 @@ class StorageBoxMain : JavaPlugin() {
     fun reloadRecipe() {
         if (Config.values.enableCraftingStorageBox) {
             val rawRecipe = Config.values.recipe
+            
+            // レシピがconfigに定義されていたら
             if (rawRecipe.isNotEmpty()) {
                 val recipeList = server.getRecipesFor(registerChest)
                 if (recipeList.isNotEmpty()) {
-                    server.clearRecipes()
+                    val iterator = server.recipeIterator()
+                    while (iterator.hasNext()) {
+                        val r = iterator.next()
+                        if (r is ShapedRecipe && r == recipeList[0]) {
+                            iterator.remove()
+                        }
+                    }
                 }
 
                 // レシピ作成部

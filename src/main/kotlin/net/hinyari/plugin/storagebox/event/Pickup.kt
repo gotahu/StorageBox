@@ -13,8 +13,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent
 
 class Pickup constructor(val plugin: StorageBoxMain) : Listener {
 
-    private var triedtimes = 0
-
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     fun onPlayerPickupItemEvent(event: EntityPickupItemEvent) {
 
