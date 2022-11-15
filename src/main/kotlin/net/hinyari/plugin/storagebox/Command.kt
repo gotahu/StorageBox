@@ -121,16 +121,6 @@ class Command constructor(val plugin: StorageBoxMain) : CommandExecutor {
                         }
 
                         val taken = SBUtil.getAmountOfStorageBox(item) - args[1].toInt()
-                        if (taken < 0) {
-                            return player.sendMessageWithErrorPrefix("指定した数量のアイテムがありません!")
-                        }
-
-                        // 求める数量とStorageBox内の数量が同じ
-                        if (taken == 0) {
-                            player.inventory.remove(item)
-                        } else {
-                            player.itemInMainHand = item.toStorageBox(taken)
-                        }
 
                         player.giveItem(item.reset(), taken)
                         return player.sendMessageWithPrefix("$taken 個のアイテムを取り出しました。")
